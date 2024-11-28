@@ -73,9 +73,24 @@ inscribeRouter.get('/:cod_e/:cod_a/:id_p/:grupo', (req, res) => __awaiter(void 0
         res.status(result.statusCode).json(result);
     });
 }));
-inscribeRouter.put('/:cod_e/:cod_a/:id_p/:grupo', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { cod_e, id_p, cod_a, grupo } = req.params;
-    const updatedInscribe = Object.assign(Object.assign({}, req.body), { cod_e, cod_a, id_p, grupo });
+inscribeRouter.get('/:cod_a/:grupo', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //const cod_e = parseInt(req.params.cod_e);
+    const cod_a = parseInt(req.params.cod_a);
+    //const id_p = parseInt(req.params.id_p);
+    const grupo = req.params.grupo;
+    inscribeController.getByEs(cod_a, grupo, (err, result) => {
+        if (err) {
+            return res.status(500).json({ 'message': err.message });
+        }
+        if (!result) {
+            return res.status(404).json({ 'message': 'Inscripcion no encontrada' });
+        }
+        res.status(result.statusCode).json(result);
+    });
+}));
+inscribeRouter.put('/:cod_e/:cod_a', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cod_e, cod_a } = req.params;
+    const updatedInscribe = Object.assign(Object.assign({}, req.body), { cod_e, cod_a });
     inscribeController.update(updatedInscribe, (err, result) => {
         if (err) {
             return res.status(500).json({ 'message': err.message });

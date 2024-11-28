@@ -82,6 +82,61 @@ export const getById = (id_p: number, cod_a: number, grupo: string, callback: Fu
   });
 };
 
+export const getByPro = (id_p: number, callback: Function) => {
+    const queryString = 'SELECT * FROM imparte WHERE id_p = ? ';
+
+    db.query(queryString, [id_p], (err, result) => {
+        if (err) { callback(err); }
+    
+        const row = (<RowDataPacket[]>result)[0];
+        if (row) {
+            const imparte: Imparte = {
+                id_p: row.id_p,
+                cod_a: row.cod_a,
+                grupo: row.grupo,
+                horario: row.horario,
+            };
+            callback(null, {
+                statusCode: 200,
+                message: 'El profesor imparte en ',
+                data: imparte
+            });
+        } else {
+            callback(null, {
+                statusCode: 404,
+                message: 'Imparticion no encontrada'
+            });
+        }
+  });
+};
+
+export const getByAsi = (cod_a: number, callback: Function) => {
+    const queryString = 'SELECT * FROM imparte WHERE cod_a = ? ';
+
+    db.query(queryString, [cod_a], (err, result) => {
+        if (err) { callback(err); }
+
+        const row = (<RowDataPacket[]>result)[0];
+        if (row) {
+            const imparte: Imparte = {
+                id_p: row.id_p,
+                cod_a: row.cod_a,
+                grupo: row.grupo,
+                horario: row.horario,
+            };
+            callback(null, {
+                statusCode: 200,
+                message: 'La asignatura es impartida por ',
+                data: imparte
+            });
+        } else {
+            callback(null, {
+                statusCode: 404,
+                message: 'Imparticion no encontrada'
+            });
+        }
+    });
+};
 export const update = (imparte: Imparte, callback: Function) => {
     const queryString = 'UPDATE imparte SET grupo = ?, horario = ? WHERE id_p = ? AND cod_a = ?';
 

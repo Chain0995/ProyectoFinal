@@ -91,13 +91,72 @@ export const getById = (cod_e:number, cod_a: number, id_p: number,  grupo: strin
         }
   });
 };
+export const getByCod = (cod_e:number,callback: Function) => {
+    const queryString = 'SELECT * FROM inscribe WHERE cod_e =?';
 
+    db.query(queryString, [cod_e], (err, result) => {
+        if (err) { callback(err); }
+    
+        const row = (<RowDataPacket[]>result)[0];
+        if (row) {
+            const inscribe: Inscribe = {
+              cod_e:row.cod_e,
+              cod_a: row.cod_a,
+              id_p: row.id_p,
+              grupo: row.grupo,
+              n1: row.n1,
+              n2: row.n2,
+              n3: row.n3,
+            };
+            callback(null, {
+                statusCode: 200,
+                message: 'Inscripcion obtenida exitosamente',
+                data: inscribe
+            });
+        } else {
+            callback(null, {
+                statusCode: 404,
+                message: 'Inscripcion no encontrada'
+            });
+        }
+  });
+};
+export const getByEs = (cod_a:number,grupo:string,callback: Function) => {
+    const queryString = 'SELECT * FROM inscribe WHERE cod_a =? AND grupo =?';
+
+    db.query(queryString, [cod_a,grupo], (err, result) => {
+        if (err) { callback(err); }
+    
+        const row = (<RowDataPacket[]>result)[0];
+        if (row) {
+            const inscribe: Inscribe = {
+              cod_e:row.cod_e,
+              cod_a: row.cod_a,
+              id_p: row.id_p,
+              grupo: row.grupo,
+              n1: row.n1,
+              n2: row.n2,
+              n3: row.n3,
+            };
+            callback(null, {
+                statusCode: 200,
+                message: 'Los estudiantes cursan',
+                data: inscribe
+            });
+        } else {
+            callback(null, {
+                statusCode: 404,
+                message: 'Inscripcion no encontrada'
+            });
+        }
+  });
+};
 export const update = (inscribe: Inscribe, callback: Function) => {
-    const queryString = 'UPDATE inscribe SET n1 = ?, n2 = ?, n3 = ? WHERE cod_e = ? AND cod_a = ? AND id_p = ? AND grupo = ?';
+    const queryString = 'UPDATE inscribe SET n1 = ?, n2 = ?, n3 = ? WHERE cod_e = ? AND cod_a = ?';
 
     db.query(
         queryString,
-        [inscribe.n1, inscribe.n2, inscribe.n3, inscribe.cod_e, inscribe.cod_a, inscribe.id_p, inscribe.grupo],
+        [inscribe.n1, inscribe.n2, inscribe.n3, inscribe.cod_e, inscribe.cod_a],
         (err) => {
             if (err) { callback(err); }
 

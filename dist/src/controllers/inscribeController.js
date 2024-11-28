@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.remove = exports.update = exports.getById = exports.getAll = exports.create = void 0;
+exports.remove = exports.update = exports.getByEs = exports.getById = exports.getAll = exports.create = void 0;
 const DB_1 = require("../../DB");
 const create = (inscribe, callback) => {
     const queryString = 'INSERT INTO inscribe (cod_e,cod_a, id_p, grupo, n1, n2, n3) VALUES (?, ?, ?, ?, ?, ?, ?)';
@@ -87,15 +87,47 @@ const getById = (cod_e, cod_a, id_p, grupo, callback) => {
     });
 };
 exports.getById = getById;
+const getByEs = (cod_a, grupo, callback) => {
+    const queryString = 'SELECT * FROM inscribe WHERE cod_a =? AND grupo =?';
+    DB_1.db.query(queryString, [cod_a, grupo], (err, result) => {
+        if (err) {
+            callback(err);
+        }
+        const row = result[0];
+        if (row) {
+            const inscribe = {
+                cod_e: row.cod_e,
+                cod_a: row.cod_a,
+                id_p: row.id_p,
+                grupo: row.grupo,
+                n1: row.n1,
+                n2: row.n2,
+                n3: row.n3,
+            };
+            callback(null, {
+                statusCode: 200,
+                message: 'El estudiante Cursa',
+                data: inscribe
+            });
+        }
+        else {
+            callback(null, {
+                statusCode: 404,
+                message: 'Inscripcion no encontrada'
+            });
+        }
+    });
+};
+exports.getByEs = getByEs;
 const update = (inscribe, callback) => {
-    const queryString = 'UPDATE inscribe SET n1 = ?, n2 = ?,n3 = ? WHERE cod_e =? AND cod_a = ? AND id_p = ? AND grupo = ?'; //pendiente
-    DB_1.db.query(queryString, [inscribe.cod_e, inscribe.cod_a, inscribe.id_p, inscribe.grupo, inscribe.n1, inscribe.n2, inscribe.n3], (err) => {
+    const queryString = 'UPDATE inscribe SET n1 = ?, n2 = ?, n3 = ? WHERE cod_e = ? AND cod_a = ?';
+    DB_1.db.query(queryString, [inscribe.n1, inscribe.n2, inscribe.n3, inscribe.cod_e, inscribe.cod_a], (err) => {
         if (err) {
             callback(err);
         }
         callback(null, {
             statusCode: 200,
-            message: 'Inscripcion actualizada exitosamente',
+            message: 'Inscripción actualizada exitosamente',
             data: {
                 cod_e: inscribe.cod_e,
                 cod_a: inscribe.cod_a,

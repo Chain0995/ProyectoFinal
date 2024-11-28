@@ -72,6 +72,30 @@ imparteRouter.get('/:id_p/:cod_a/:grupo', (req, res) => __awaiter(void 0, void 0
         res.status(result.statusCode).json(result);
     });
 }));
+imparteRouter.get('/:id_p', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id_p = parseInt(req.params.id_p);
+    imparteController.getByPro(id_p, (err, result) => {
+        if (err) {
+            return res.status(500).json({ 'message': err.message });
+        }
+        if (!result) {
+            return res.status(404).json({ 'message': 'Impartición no encontrada' });
+        }
+        res.status(result.statusCode).json(result);
+    });
+}));
+imparteRouter.get('/:cod_a', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const cod_a = parseInt(req.params.cod_a);
+    imparteController.getByAsi(cod_a, (err, result) => {
+        if (err) {
+            return res.status(500).json({ 'message': err.message });
+        }
+        if (!result) {
+            return res.status(404).json({ 'message': 'Impartición no encontrada' });
+        }
+        res.status(result.statusCode).json(result);
+    });
+}));
 imparteRouter.put('/:id_p/:cod_a/:grupo', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id_p, cod_a, grupo } = req.params;
     const updatedImparte = Object.assign(Object.assign({}, req.body), { id_p, cod_a, grupo });

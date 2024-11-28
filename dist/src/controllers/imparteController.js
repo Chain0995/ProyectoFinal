@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.remove = exports.update = exports.getById = exports.getAll = exports.create = void 0;
+exports.remove = exports.update = exports.getByAsi = exports.getByPro = exports.getById = exports.getAll = exports.create = void 0;
 const DB_1 = require("../../DB");
 const create = (imparte, callback) => {
     const queryString = 'INSERT INTO imparte (id_p, cod_a, grupo, horario) VALUES (?, ?, ?, ?)';
@@ -77,6 +77,64 @@ const getById = (id_p, cod_a, grupo, callback) => {
     });
 };
 exports.getById = getById;
+const getByPro = (id_p, callback) => {
+    const queryString = 'SELECT * FROM imparte WHERE id_p = ? ';
+    DB_1.db.query(queryString, [id_p], (err, result) => {
+        if (err) {
+            callback(err);
+        }
+        const row = result[0];
+        if (row) {
+            const imparte = {
+                id_p: row.id_p,
+                cod_a: row.cod_a,
+                grupo: row.grupo,
+                horario: row.horario,
+            };
+            callback(null, {
+                statusCode: 200,
+                message: 'El profesor imparte en ',
+                data: imparte
+            });
+        }
+        else {
+            callback(null, {
+                statusCode: 404,
+                message: 'Imparticion no encontrada'
+            });
+        }
+    });
+};
+exports.getByPro = getByPro;
+const getByAsi = (cod_a, callback) => {
+    const queryString = 'SELECT * FROM imparte WHERE cod_a = ? ';
+    DB_1.db.query(queryString, [cod_a], (err, result) => {
+        if (err) {
+            callback(err);
+        }
+        const row = result[0];
+        if (row) {
+            const imparte = {
+                id_p: row.id_p,
+                cod_a: row.cod_a,
+                grupo: row.grupo,
+                horario: row.horario,
+            };
+            callback(null, {
+                statusCode: 200,
+                message: 'La asignatura es impartida por ',
+                data: imparte
+            });
+        }
+        else {
+            callback(null, {
+                statusCode: 404,
+                message: 'Imparticion no encontrada'
+            });
+        }
+    });
+};
+exports.getByAsi = getByAsi;
 const update = (imparte, callback) => {
     const queryString = 'UPDATE imparte SET grupo = ?, horario = ? WHERE id_p = ? AND cod_a = ?';
     DB_1.db.query(queryString, [imparte.grupo, imparte.horario, imparte.id_p, imparte.cod_a], (err) => {
